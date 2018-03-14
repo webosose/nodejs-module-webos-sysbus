@@ -1,0 +1,7 @@
+{
+    "role": {
+        "exeName":"/usr/palm/nodejs/node",
+        "type": "privileged",
+        "allowedNames": ["*"]
+    }
+}
