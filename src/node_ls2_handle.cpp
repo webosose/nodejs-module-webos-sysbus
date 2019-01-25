@@ -103,13 +103,10 @@ void LS2Handle::New(const v8::FunctionCallbackInfo<v8::Value>& args)
 
         LSErrorWrapper err;
         if (args.Length() >= 2 && args[1]->IsBoolean()) {
-            // deprecated initialization. Arguments: "service name", "public/private bus"
-            if (!LSRegisterPubPriv(serviceName.value(), &ls_handle, args[1]->BooleanValue(), err)) {
-                err.ThrowError();
-            }
-        }
-        else { // correct initialization. Arguments: "service name"
-            if (!LSRegisterApplicationService(serviceName.value(), findMyAppId(isolate).c_str(),
+                  err.ThrowError();
+          }
+          else { // correct initialization. Arguments: "service name"            
+              if (!LSRegisterApplicationService(serviceName.value(), findMyAppId(isolate).c_str(),
                 &ls_handle, err))
             {
                 err.ThrowError();
