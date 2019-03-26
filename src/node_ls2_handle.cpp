@@ -411,7 +411,7 @@ const std::string& LS2Handle::findMyAppId(v8::Isolate* isolate)
     v8::Local<v8::StackTrace> trace = v8::StackTrace::CurrentStackTrace(isolate, 50, v8::StackTrace::kScriptName);
     for(int i = 0; i < trace->GetFrameCount(); i++) {
         std::string scriptName = ConvertFromJS<std::string>(trace->GetFrame(i)->GetScriptName()).value();
-        std::string scriptDirectory = scriptName.substr(0, scriptName.rfind('/'));
+        std::string scriptDirectory = scriptName.substr(0, scriptName.rfind('/') + 1);
         auto serviceInfo = fRegisteredServices.find(scriptDirectory);
         if (serviceInfo != fRegisteredServices.end()) {
             return serviceInfo->second;
