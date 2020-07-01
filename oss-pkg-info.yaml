@@ -1,0 +1,5 @@
+Open Source Software Package:
+- name: webosSOE-nodejs-module-webos-sysbus
+  source: git://github.com/webosose/nodejs-module-webos-sysbus
+  license: Apache-2.0
+
