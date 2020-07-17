@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2018 LG Electronics, Inc.
+// Copyright (c) 2010-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ class LS2Base : public node::ObjectWrap {
 protected:
 	// Common routine called whenever a message arrives from the bus. Different symbols
 	// are used to differentiate requests, responses and cancelled subscriptions
-	void EmitMessage(const v8::Handle<v8::String>& symbol, LSMessage *message);
+	void EmitMessage(const v8::Local<v8::String>& symbol, LSMessage *message);
 };
 
 #endif

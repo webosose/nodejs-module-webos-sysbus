@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2018 LG Electronics, Inc.
+// Copyright (c) 2010-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ struct LSMessage;
 class LS2Message : public node::ObjectWrap {
 public:
 	// Create the "Message" function template and add it to the target.
-	static void Initialize (v8::Handle<v8::Object> target);
+	static void Initialize (v8::Local<v8::Object> target);
 
 	// Create a "Message" JavaScript object and wrap it around the C++ LSMessage object.
 	static v8::Local<v8::Value> NewFromMessage(LSMessage*);
@@ -120,8 +120,8 @@ private:
 // object. See node_ls2_utils.h for a description of how ConvertFromJS works.
 
 template <> struct ConvertFromJS<LS2Message*> {
-    explicit ConvertFromJS(const v8::Handle<v8::Value>& value) : fMessage(0) {
-        v8::Handle<v8::Object> o = v8::Handle<v8::Object>::Cast(value);
+    explicit ConvertFromJS(const v8::Local<v8::Value>& value) : fMessage(0) {
+        v8::Local<v8::Object> o = v8::Local<v8::Object>::Cast(value);
         fMessage = node::ObjectWrap::Unwrap<LS2Message>(o);
         if (!fMessage) {
             throw std::runtime_error("Unable to unwrap native object.");

@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2018 LG Electronics, Inc.
+// Copyright (c) 2010-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -241,7 +241,7 @@ static void check_cb(uv_check_t* w)
 
 static struct econtext default_context;
 
-void init(Handle<Object> target)
+void init(Local<Object> target)
 {
     HandleScope scope(Isolate::GetCurrent());
     gMainLoop = g_main_loop_new(NULL, true);

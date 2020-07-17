@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2018 LG Electronics, Inc.
+// Copyright (c) 2010-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,9 +35,10 @@ static Persistent<String> response_symbol;
 
 // Called during add-on initialization to add the "Call" template function
 // to the target object.
-void LS2Call::Initialize (Handle<Object> target)
+void LS2Call::Initialize (Local<Object> target)
 {
     v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    Local<Context> currentContext = isolate->GetCurrentContext();
     HandleScope scope(isolate);
 
     Local<FunctionTemplate> t = FunctionTemplate::New(isolate, New);
@@ -53,7 +54,7 @@ void LS2Call::Initialize (Handle<Object> target)
 
     response_symbol.Reset(isolate, String::NewFromUtf8(isolate, "response"));
 
-    target->Set(String::NewFromUtf8(isolate, "Call"), t->GetFunction());
+    target->Set(String::NewFromUtf8(isolate, "Call"), t->GetFunction(currentContext).ToLocalChecked());
 }
 
 // Used by LSHandle to create a "Call" object that wraps a particular
@@ -61,9 +62,10 @@ void LS2Call::Initialize (Handle<Object> target)
 Local<Object> LS2Call::NewForCall()
 {
     v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    Local<Context> currentContext = isolate->GetCurrentContext();
     Local<FunctionTemplate> lCallTemplate = Local<FunctionTemplate>::New(isolate, gCallTemplate);
-    Local<Function> function = lCallTemplate->GetFunction();
-    Local<Object> callObject = function->NewInstance();
+    Local<Function> function = lCallTemplate->GetFunction(currentContext).ToLocalChecked();
+    Local<Object> callObject = function->NewInstance(currentContext).ToLocalChecked();
     return callObject;
 }
 
