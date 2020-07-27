@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2018 LG Electronics, Inc.
+// Copyright (c) 2010-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public:
     enum {kUnlimitedResponses = 0};
 
 	// Create the "Call" function template and add it to the target.
-	static void Initialize (v8::Handle<v8::Object> target);
+	static void Initialize (v8::Local<v8::Object> target);
 	
 	// Create a "Call" JavaScript object and with a handle and a token.
 	static v8::Local<v8::Object> NewForCall();

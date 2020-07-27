@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2018 LG Electronics, Inc.
+// Copyright (c) 2010-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
 using namespace node;
 using namespace v8;
 
-void LS2Base::EmitMessage(const Handle<String>& symbol, LSMessage *message)
+void LS2Base::EmitMessage(const Local<String>& symbol, LSMessage *message)
 {
     Local<Value> messageObject = LS2Message::NewFromMessage(message);
     
@@ -31,7 +31,7 @@ void LS2Base::EmitMessage(const Handle<String>& symbol, LSMessage *message)
     // LS2Message::NewFromMessage
     if (!messageObject.IsEmpty()) {
 
-      Handle<Value> argv[2] =
+      Local<Value> argv[2] =
       {
         symbol, // event name
         messageObject  // argument
@@ -41,7 +41,7 @@ void LS2Base::EmitMessage(const Handle<String>& symbol, LSMessage *message)
                    this->handle(),
                    static_cast<const char*>("emit"),
                    2,
-                   static_cast<v8::Handle<v8::Value>*>(argv));
+                   static_cast<v8::Local<v8::Value>*>(argv));
     } else {
         // We don't want to silently lose messages
         syslog(LOG_USER | LOG_CRIT, "%s: messageObject is empty", __PRETTY_FUNCTION__);

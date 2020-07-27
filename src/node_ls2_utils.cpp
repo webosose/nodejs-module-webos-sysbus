@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2018 LG Electronics, Inc.
+// Copyright (c) 2010-2020 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,22 +16,22 @@
 
 #include "node_ls2_utils.h"
 
-template <> v8::Handle<v8::Value> ConvertToJS<const char*>(const char* v)
+template <> v8::Local<v8::Value> ConvertToJS<const char*>(const char* v)
 {
     return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), v);
 }
 
-template <> v8::Handle<v8::Value> ConvertToJS<uint32_t>(uint32_t v)
+template <> v8::Local<v8::Value> ConvertToJS<uint32_t>(uint32_t v)
 {
     return v8::Integer::NewFromUnsigned(v8::Isolate::GetCurrent(), v);
 }
 
-template <> v8::Handle<v8::Value> ConvertToJS<bool>(bool v)
+template <> v8::Local<v8::Value> ConvertToJS<bool>(bool v)
 {
     return v8::Boolean::New(v8::Isolate::GetCurrent(), v);
 }
 
-template <> v8::Handle<v8::Value> ConvertToJS< v8::Handle<v8::Value> >(v8::Handle<v8::Value>  v)
+template <> v8::Local<v8::Value> ConvertToJS< v8::Local<v8::Value> >(v8::Local<v8::Value>  v)
 {
     return v;
 }
