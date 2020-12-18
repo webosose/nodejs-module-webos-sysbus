@@ -92,7 +92,7 @@ void LS2Call::SetHandle(LS2Handle* handle)
 }
 
 
-void LS2Call::Call(const char* busName, const char* payload, int responseLimit)
+void LS2Call::Call(const char* busName, const char* payload, int responseLimit, const char* sessionId)
 {
     RequireHandle();
     fResponseLimit = responseLimit;
@@ -101,9 +101,15 @@ void LS2Call::Call(const char* busName, const char* payload, int responseLimit)
     bool result;
     void* userData((void*)this);
     if (responseLimit == 1) {
-        result = LSCallOneReply(fHandle->Get(), busName, payload, &LS2Call::ResponseCallback, userData, &fToken, err);
+        if (sessionId == NULL)
+            result = LSCallOneReply(fHandle->Get(), busName, payload, &LS2Call::ResponseCallback, userData, &fToken, err);
+        else
+            result = LSCallSessionOneReply(fHandle->Get(), busName, payload, sessionId, &LS2Call::ResponseCallback, userData, &fToken, err);
     } else {
-        result = LSCall(fHandle->Get(), busName, payload, &LS2Call::ResponseCallback, userData, &fToken, err);
+        if (sessionId == NULL)
+            result = LSCall(fHandle->Get(), busName, payload, &LS2Call::ResponseCallback, userData, &fToken, err);
+        else
+            result = LSCallSession(fHandle->Get(), busName, payload, sessionId, &LS2Call::ResponseCallback, userData, &fToken, err);
     }
     if (!result) {
         err.ThrowError();

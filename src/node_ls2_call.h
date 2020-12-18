@@ -29,15 +29,15 @@ public:
 
 	// Create the "Call" function template and add it to the target.
 	static void Initialize (v8::Local<v8::Object> target);
-	
+
 	// Create a "Call" JavaScript object and with a handle and a token.
 	static v8::Local<v8::Object> NewForCall();
-	
+
 	explicit LS2Call();
-	
+
     void SetHandle(LS2Handle* handle);
 
-    void Call(const char* busName, const char* payload, int responseLimit);
+    void Call(const char* busName, const char* payload, int responseLimit, const char* sessionId = NULL);
 
 protected:
 	// Called by V8 when the "Call" function is used with new. This has to be here, but the
