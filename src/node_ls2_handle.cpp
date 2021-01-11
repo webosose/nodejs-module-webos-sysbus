@@ -100,14 +100,24 @@ void LS2Handle::New(const v8::FunctionCallbackInfo<v8::Value>& args)
             throw std::runtime_error("Too few arguments");
         }
         ConvertFromJS<const char*> serviceName(args[0]);
+
         LSHandle* ls_handle = nullptr;
 
         LSErrorWrapper err;
         if (args.Length() >= 2 && args[1]->IsBoolean()) {
-                  err.ThrowError();
-          }
-          else { // correct initialization. Arguments: "service name"            
-              if (!LSRegisterApplicationService(serviceName.value(), findMyAppId(isolate).c_str(),
+            err.ThrowError();
+        }
+        else { // correct initialization. Arguments: "service name"
+            std::string appId = "";
+            if (!strcmp(serviceName.value(), "com.webos.service.jsserver"))
+            {
+                appId = serviceName.value();
+            }
+            else
+            {
+                appId = findMyAppId(isolate);
+            }
+            if (!LSRegisterApplicationService(serviceName.value(), appId.c_str(),
                 &ls_handle, err))
             {
                 err.ThrowError();
@@ -352,7 +362,9 @@ void LS2Handle::SetAppId(const v8::FunctionCallbackInfo<v8::Value>& args)
     HandleScope scope(isolate);
 
     try {
-        checkCallerScriptPermissions(isolate);
+        ConvertFromJS<const char*> serviceName(args[0]);
+        if (strcmp(serviceName.value(), "com.webos.service.jsserver"))
+            checkCallerScriptPermissions(isolate);
 
         if (args.Length() < 2) {
             throw std::runtime_error("Invalid arguments");
