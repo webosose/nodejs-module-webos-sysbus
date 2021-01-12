@@ -59,8 +59,10 @@ void LS2Handle::Initialize(Local<Object> target)
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
     NODE_SET_PROTOTYPE_METHOD(t, "call", CallWrapper);
+    NODE_SET_PROTOTYPE_METHOD(t, "callSession", CallSessionWrapper);
     NODE_SET_PROTOTYPE_METHOD(t, "watch", WatchWrapper);
     NODE_SET_PROTOTYPE_METHOD(t, "subscribe", SubscribeWrapper);
+    NODE_SET_PROTOTYPE_METHOD(t, "subscribeSession", SubscribeSessionWrapper);
     NODE_SET_PROTOTYPE_METHOD(t, "registerMethod", RegisterMethodWrapper);
     NODE_SET_PROTOTYPE_METHOD(t, "subscriptionAdd", SubscriptionAddWrapper);
     NODE_SET_PROTOTYPE_METHOD(t, "cancel", CancelWrapper);
@@ -171,6 +173,16 @@ Local<Value> LS2Handle::Call(const char* busName, const char* payload)
     return CallInternal(busName, payload, 1);
 }
 
+void LS2Handle::CallSessionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+    MemberFunctionWrapper<LS2Handle, Local<Value>, const char*, const char*>(&LS2Handle::CallSession, args);
+}
+
+Local<Value> LS2Handle::CallSession(const char* busName, const char* payload, const char* sessionId)
+{
+    return CallInternal(busName, payload, 1, sessionId);
+}
+
 void LS2Handle::WatchWrapper(const v8::FunctionCallbackInfo<v8::Value>& args)
 {
     MemberFunctionWrapper<LS2Handle, Local<Value>, const char*, const char*>(&LS2Handle::Watch, args);
@@ -189,6 +201,16 @@ void LS2Handle::SubscribeWrapper(const v8::FunctionCallbackInfo<v8::Value>& args
 Local<Value> LS2Handle::Subscribe(const char* busName, const char* payload)
 {
     return CallInternal(busName, payload, LS2Call::kUnlimitedResponses);
+}
+
+void LS2Handle::SubscribeSessionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args)
+{
+    MemberFunctionWrapper<LS2Handle, Local<Value>, const char*, const char*>(&LS2Handle::SubscribeSession, args);
+}
+
+Local<Value> LS2Handle::SubscribeSession(const char* busName, const char* payload, const char* sessionId)
+{
+    return CallInternal(busName, payload, LS2Call::kUnlimitedResponses, sessionId);
 }
 
 void LS2Handle::CancelWrapper(const v8::FunctionCallbackInfo<v8::Value>& args)
@@ -285,7 +307,7 @@ void LS2Handle::SubscriptionAdd(const char* key, LS2Message* msg)
     }
 }
 
-Local<Value> LS2Handle::CallInternal(const char* busName, const char* payload, int responseLimit)
+Local<Value> LS2Handle::CallInternal(const char* busName, const char* payload, int responseLimit, const char* sessionId)
 {
     RequireHandle();
     Local<Object> callObject = LS2Call::NewForCall();
@@ -296,7 +318,10 @@ Local<Value> LS2Handle::CallInternal(const char* busName, const char* payload, i
                 v8::String::NewFromUtf8(isolate, "Unable to unwrap native object."));
     }
     call->SetHandle(this);
-    call->Call(busName, payload, responseLimit);
+    if (sessionId != NULL)
+        call->Call(busName, payload, responseLimit, sessionId);
+    else
+        call->Call(busName, payload, responseLimit);
     return callObject;
 }
 

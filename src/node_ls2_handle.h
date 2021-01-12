@@ -53,11 +53,17 @@ private:
 	static void CallWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);
 	v8::Local<v8::Value> Call(const char* busName, const char* payload);
 
+	static void CallSessionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);
+	v8::Local<v8::Value> CallSession(const char* busName, const char* payload, const char* sessionId);
+
 	static void WatchWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);
 	v8::Local<v8::Value> Watch(const char* busName, const char* payload);
 
 	static void SubscribeWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);
 	v8::Local<v8::Value> Subscribe(const char* busName, const char* payload);
+
+	static void SubscribeSessionWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);
+	v8::Local<v8::Value> SubscribeSession(const char* busName, const char* payload, const char* sessionId);
 
 	static void CancelWrapper(const v8::FunctionCallbackInfo<v8::Value>& args);
 	bool Cancel(LSMessageToken token);
@@ -75,7 +81,7 @@ private:
 	void SubscriptionAdd(const char* key, LS2Message* msg);
 
 	// Common implmentation for Call, Watch and Subscribe
-   	v8::Local<v8::Value> CallInternal(const char* busName, const char* payload, int responseLimit);
+	v8::Local<v8::Value> CallInternal(const char* busName, const char* payload, int responseLimit, const char* sessionId = NULL);
 
    	// Glib integration
 	void Attach(GMainLoop *mainLoop);
