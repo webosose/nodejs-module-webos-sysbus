@@ -98,18 +98,30 @@ void LS2Call::Call(const char* busName, const char* payload, int responseLimit, 
     fResponseLimit = responseLimit;
     fToken = LSMESSAGE_TOKEN_INVALID;
     LSErrorWrapper err;
-    bool result;
+    bool result = true;
     void* userData((void*)this);
     if (responseLimit == 1) {
         if (sessionId == NULL)
             result = LSCallOneReply(fHandle->Get(), busName, payload, &LS2Call::ResponseCallback, userData, &fToken, err);
-        else
+        else {
+#ifdef ENABLE_SESSION_CALL
             result = LSCallSessionOneReply(fHandle->Get(), busName, payload, sessionId, &LS2Call::ResponseCallback, userData, &fToken, err);
+#else
+            cerr << "No support LSCallSessionOneReply.";
+            err.Print();
+#endif
+        }
     } else {
         if (sessionId == NULL)
             result = LSCall(fHandle->Get(), busName, payload, &LS2Call::ResponseCallback, userData, &fToken, err);
-        else
+        else {
+#ifdef ENABLE_SESSION_CALL
             result = LSCallSession(fHandle->Get(), busName, payload, sessionId, &LS2Call::ResponseCallback, userData, &fToken, err);
+#else
+            cerr << "No support LSCallSession.";
+            err.Print();
+#endif
+        }
     }
     if (!result) {
         err.ThrowError();
