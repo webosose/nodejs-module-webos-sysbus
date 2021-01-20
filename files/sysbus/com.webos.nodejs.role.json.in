@@ -1,5 +1,6 @@
 {
     "exeName":"@WEBOS_INSTALL_BINDIR@/node",
+    "trustLevel": "oem",
     "type": "privileged",
     "allowedNames": ["*"],
     "permissions": [
