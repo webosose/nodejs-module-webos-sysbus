@@ -28,7 +28,7 @@ public:
     enum {kUnlimitedResponses = 0};
 
 	// Create the "Call" function template and add it to the target.
-	static void Initialize (v8::Local<v8::Object> target);
+	static void Initialize (v8::Local<v8::Object> target, v8::Local<v8::Context> context);
 
 	// Create a "Call" JavaScript object and with a handle and a token.
 	static v8::Local<v8::Object> NewForCall();

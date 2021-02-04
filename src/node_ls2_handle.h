@@ -32,7 +32,7 @@ class LS2Call;
 class LS2Handle : public LS2Base {
 public:
 	// Create the "Handle" function template and add it to the target.
-	static void Initialize (v8::Local<v8::Object> target);
+	static void Initialize (v8::Local<v8::Object> target, v8::Local<v8::Context> context);
 
     void CallCreated(LS2Call* call);
     void CallCompleted(LS2Call* call);

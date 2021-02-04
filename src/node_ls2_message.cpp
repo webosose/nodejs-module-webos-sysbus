@@ -38,9 +38,9 @@ Persistent<FunctionTemplate> LS2Message::gMessageTemplate;
 
 // Called during add-on initialization to add the "Message" template function
 // to the target object.
-void LS2Message::Initialize (Local<Object> target)
+void LS2Message::Initialize (Local<Object> target, v8::Local<v8::Context> context)
 {
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::Isolate* isolate = context->GetIsolate();
     Local<Context> currentContext = isolate->GetCurrentContext();
     HandleScope scope(isolate);
 
