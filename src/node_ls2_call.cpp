@@ -35,9 +35,9 @@ static Persistent<String> response_symbol;
 
 // Called during add-on initialization to add the "Call" template function
 // to the target object.
-void LS2Call::Initialize (Local<Object> target)
+void LS2Call::Initialize (Local<Object> target, v8::Local<v8::Context> context)
 {
-    v8::Isolate* isolate = v8::Isolate::GetCurrent();
+    v8::Isolate* isolate = context->GetIsolate();
     Local<Context> currentContext = isolate->GetCurrentContext();
     HandleScope scope(isolate);
 

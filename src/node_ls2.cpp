@@ -23,6 +23,7 @@
 #include <list>
 #include <map>
 #include <algorithm>
+//#include <nan.h>
 
 #include "node_ls2_call.h"
 #include "node_ls2_handle.h"
@@ -241,9 +242,17 @@ static void check_cb(uv_check_t* w)
 
 static struct econtext default_context;
 
-void init(Local<Object> target)
+GMainLoop* GetMainLoop()
 {
-    HandleScope scope(Isolate::GetCurrent());
+    return gMainLoop;
+}
+
+extern "C" NODE_MODULE_EXPORT void
+NODE_MODULE_INITIALIZER(v8::Local<v8::Object> exports,
+                        v8::Local<v8::Value> module,
+                        v8::Local<v8::Context> context) {
+    Isolate* isolate = context->GetIsolate();
+    HandleScope scope(isolate);
     gMainLoop = g_main_loop_new(NULL, true);
 
     GMainContext *gc = g_main_context_default();
@@ -269,15 +278,7 @@ void init(Local<Object> target)
     uv_timer_init(uv_default_loop(), &ctx->tw);
     uv_timer_init(uv_default_loop(), &timeout_handle);
 
-    LS2Handle::Initialize(target);
-    LS2Message::Initialize(target);
-    LS2Call::Initialize(target);
+    LS2Handle::Initialize(exports, context);
+    LS2Message::Initialize(exports, context);
+    LS2Call::Initialize(exports, context);
 }
-
-GMainLoop* GetMainLoop()
-{
-    return gMainLoop;
-}
-
-NODE_MODULE(webos_sysbus, init)
-

@@ -31,7 +31,7 @@ struct LSMessage;
 class LS2Message : public node::ObjectWrap {
 public:
 	// Create the "Message" function template and add it to the target.
-	static void Initialize (v8::Local<v8::Object> target);
+	static void Initialize (v8::Local<v8::Object> target, v8::Local<v8::Context> context);
 
 	// Create a "Message" JavaScript object and wrap it around the C++ LSMessage object.
 	static v8::Local<v8::Value> NewFromMessage(LSMessage*);
