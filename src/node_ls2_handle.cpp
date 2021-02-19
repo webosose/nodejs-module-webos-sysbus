@@ -450,9 +450,12 @@ const std::string& LS2Handle::findMyAppId(v8::Isolate* isolate)
     for(int i = 0; i < trace->GetFrameCount(); i++) {
         std::string scriptName = ConvertFromJS<std::string>(trace->GetFrame(isolate, i)->GetScriptName()).value();
         std::string scriptDirectory = scriptName.substr(0, scriptName.rfind('/'));
-        auto serviceInfo = fRegisteredServices.find(scriptDirectory);
-        if (serviceInfo != fRegisteredServices.end()) {
-            return serviceInfo->second;
+        auto serviceInfo = fRegisteredServices.begin();
+        while(serviceInfo != fRegisteredServices.end()) {
+            if( scriptDirectory.find(serviceInfo->first) != std::string::npos) {
+                return serviceInfo->second;
+            }
+            serviceInfo++;
         }
     }
     throw std::runtime_error("The service is not registered");
