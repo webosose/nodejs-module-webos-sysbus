@@ -46,7 +46,7 @@ void LS2Message::Initialize (Local<Object> target, v8::Local<v8::Context> contex
 
     Local<FunctionTemplate> t = FunctionTemplate::New(isolate, New);
 
-    t->SetClassName(v8::String::NewFromUtf8(isolate, "palmbus/Message"));
+    t->SetClassName(v8::String::NewFromUtf8(isolate, "palmbus/Message").ToLocalChecked());
 
     gMessageTemplate.Reset(isolate, t);
 
@@ -66,7 +66,9 @@ void LS2Message::Initialize (Local<Object> target, v8::Local<v8::Context> contex
     NODE_SET_PROTOTYPE_METHOD(t, "isSubscription", IsSubscriptionWrapper);
     NODE_SET_PROTOTYPE_METHOD(t, "respond", RespondWrapper);
 
-    target->Set(String::String::NewFromUtf8(isolate, "Message"), t->GetFunction(currentContext).ToLocalChecked());
+    target->Set(currentContext,
+                String::String::NewFromUtf8(isolate, "Message").ToLocalChecked(),
+                t->GetFunction(currentContext).ToLocalChecked());
 }
 
 // Used by LSHandle to create a "Message" object that wraps a particular
@@ -87,7 +89,7 @@ Local<Value> LS2Message::NewFromMessage(LSMessage* message)
         LS2Message *m = node::ObjectWrap::Unwrap<LS2Message>(messageObject);
         if (!m) {
             return isolate->ThrowException(
-                    v8::String::NewFromUtf8(isolate, "Unable to unwrap native object."));
+                    v8::String::NewFromUtf8(isolate, "Unable to unwrap native object.").ToLocalChecked());
         }
         m->SetMessage(message);
     } else {
@@ -118,13 +120,13 @@ void LS2Message::New(const v8::FunctionCallbackInfo<v8::Value>& args)
         args.GetReturnValue().Set(args .This());
     } catch (std::bad_alloc const & ex) {
         syslog(LOG_USER | LOG_CRIT, "%s: throwing memory allocation exception: %s", __func__, ex.what());
-        args.GetReturnValue().Set(args.GetIsolate()->ThrowException( v8::Exception::Error(v8::String::NewFromUtf8(args.GetIsolate(), ex.what()))));
+        args.GetReturnValue().Set(args.GetIsolate()->ThrowException( v8::Exception::Error(v8::String::NewFromUtf8(args.GetIsolate(), ex.what()).ToLocalChecked())));
     } catch( std::exception const & ex ) {
         syslog(LOG_USER | LOG_CRIT, "%s: throwing standard exception: %s", __func__, ex.what());
-        args.GetReturnValue().Set(args.GetIsolate()->ThrowException( v8::Exception::Error(v8::String::NewFromUtf8(args.GetIsolate(), ex.what()))));
+        args.GetReturnValue().Set(args.GetIsolate()->ThrowException( v8::Exception::Error(v8::String::NewFromUtf8(args.GetIsolate(), ex.what()).ToLocalChecked())));
     } catch( ... ) {
         syslog(LOG_USER | LOG_CRIT, "%s: throwing other exception", __func__);
-        args.GetReturnValue().Set(args.GetIsolate()->ThrowException( v8::Exception::Error(v8::String::NewFromUtf8(args.GetIsolate(), "Native function threw an unknown exception."))));
+        args.GetReturnValue().Set(args.GetIsolate()->ThrowException( v8::Exception::Error(v8::String::NewFromUtf8(args.GetIsolate(), "Native function threw an unknown exception.").ToLocalChecked())));
     }
 }
 

@@ -43,7 +43,7 @@ void LS2Call::Initialize (Local<Object> target, v8::Local<v8::Context> context)
 
     Local<FunctionTemplate> t = FunctionTemplate::New(isolate, New);
 
-    t->SetClassName(v8::String::NewFromUtf8(isolate, "palmbus/Call"));
+    t->SetClassName(v8::String::NewFromUtf8(isolate, "palmbus/Call").ToLocalChecked());
 
     gCallTemplate.Reset(isolate, t);
 
@@ -52,9 +52,9 @@ void LS2Call::Initialize (Local<Object> target, v8::Local<v8::Context> context)
     NODE_SET_PROTOTYPE_METHOD(t, "cancel", CancelWrapper);
     NODE_SET_PROTOTYPE_METHOD(t, "setResponseTimeout", SetResponseTimeoutWrapper);
 
-    response_symbol.Reset(isolate, String::NewFromUtf8(isolate, "response"));
+    response_symbol.Reset(isolate, String::NewFromUtf8(isolate, "response").ToLocalChecked());
 
-    target->Set(String::NewFromUtf8(isolate, "Call"), t->GetFunction(currentContext).ToLocalChecked());
+    target->Set(currentContext, String::NewFromUtf8(isolate, "Call").ToLocalChecked(), t->GetFunction(currentContext).ToLocalChecked());
 }
 
 // Used by LSHandle to create a "Call" object that wraps a particular
@@ -138,10 +138,10 @@ void LS2Call::New(const v8::FunctionCallbackInfo<v8::Value>& args)
         args.GetReturnValue().Set(args.This());
     } catch( std::exception const & ex ) {
         args.GetReturnValue().Set(args.GetIsolate()->ThrowException(v8::Exception::Error(
-                v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), ex.what()))));
+                v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), ex.what()).ToLocalChecked())));
     } catch( ... ) {
         args.GetReturnValue().Set(args.GetIsolate()->ThrowException(v8::Exception::Error(
-                v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "Native function threw an unknown exception."))));
+                v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), "Native function threw an unknown exception.").ToLocalChecked())));
     }
 }
 

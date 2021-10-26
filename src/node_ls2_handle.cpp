@@ -54,7 +54,7 @@ void LS2Handle::Initialize(Local<Object> target, v8::Local<v8::Context> context)
 
     Local<FunctionTemplate> t = FunctionTemplate::New(isolate, New);
 
-    t->SetClassName(v8::String::NewFromUtf8(isolate, "palmbus/Handle"));
+    t->SetClassName(v8::String::NewFromUtf8(isolate, "palmbus/Handle").ToLocalChecked());
 
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
@@ -69,10 +69,10 @@ void LS2Handle::Initialize(Local<Object> target, v8::Local<v8::Context> context)
     NODE_SET_PROTOTYPE_METHOD(t, "pushRole", PushRoleWrapper);
     NODE_SET_PROTOTYPE_METHOD(t, "unregister", UnregisterWrapper);
 
-    cancel_symbol.Reset(isolate, String::NewFromUtf8(isolate, "cancel"));
-    request_symbol.Reset(isolate, String::NewFromUtf8(isolate, "request"));
+    cancel_symbol.Reset(isolate, String::NewFromUtf8(isolate, "cancel").ToLocalChecked());
+    request_symbol.Reset(isolate, String::NewFromUtf8(isolate, "request").ToLocalChecked());
 
-    target->Set(String::NewFromUtf8(isolate, "Handle"), t->GetFunction(currentContext).ToLocalChecked());
+    target->Set(currentContext, String::NewFromUtf8(isolate, "Handle").ToLocalChecked(), t->GetFunction(currentContext).ToLocalChecked());
     NODE_SET_METHOD(target, "setAppId", LS2Handle::SetAppId);
 }
 
@@ -132,10 +132,10 @@ void LS2Handle::New(const v8::FunctionCallbackInfo<v8::Value>& args)
         args.GetReturnValue().Set(args.This());
     } catch(const std::exception& ex) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(
-            isolate, ex.what())));
+            isolate, ex.what()).ToLocalChecked()));
     } catch(...) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(
-            isolate, "Native function threw an unknown exception.")));
+            isolate, "Native function threw an unknown exception.").ToLocalChecked()));
     }
 }
 
@@ -315,7 +315,7 @@ Local<Value> LS2Handle::CallInternal(const char* busName, const char* payload, i
     if (!call) {
         v8::Isolate* isolate = v8::Isolate::GetCurrent();
         return isolate->ThrowException(
-                v8::String::NewFromUtf8(isolate, "Unable to unwrap native object."));
+                v8::String::NewFromUtf8(isolate, "Unable to unwrap native object.").ToLocalChecked());
     }
     call->SetHandle(this);
     if (sessionId != NULL)
@@ -422,11 +422,11 @@ void LS2Handle::SetAppId(const v8::FunctionCallbackInfo<v8::Value>& args)
         std::stringstream err_message;
         err_message << "SetAppId: " << e.what();
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(
-            isolate, err_message.str().c_str())));
+            isolate, err_message.str().c_str()).ToLocalChecked()));
     }
     catch(...) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(
-            isolate, "SetAppId: unknown exception")));
+            isolate, "SetAppId: unknown exception").ToLocalChecked()));
     }
 }
 
