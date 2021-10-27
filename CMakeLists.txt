@@ -36,7 +36,7 @@ pkg_check_modules(GLIB2 REQUIRED glib-2.0)
 include_directories(${GLIB2_INCLUDE_DIRS})
 webos_add_compiler_flags(ALL ${LSGLIB2_CFLAGS_OTHER})
 
-webos_add_compiler_flags(ALL -g -Wall -Wno-error=strict-aliasing -DEV_MULTIPLICITY=0 CXX -std=c++11)
+webos_add_compiler_flags(ALL -g -Wall -Wno-error=strict-aliasing -DEV_MULTIPLICITY=0 CXX -std=c++14)
 
 # Can't specify --no-undefined because the plugin is allowed to link with all of
 # the routines from the embedded v8 when it is loaded at runtime, but there's no

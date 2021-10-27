@@ -40,7 +40,7 @@
       },
       'cflags!': [ '-fno-exceptions' ],
       'cflags': [ '-g' ],
-      'cflags_cc': [ '-g', '--std=c++11' ],
+      'cflags_cc': [ '-g', '--std=c++14' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       'ldflags': [ '-pthread' ],
       'actions': [
