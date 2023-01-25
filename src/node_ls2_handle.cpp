@@ -1,4 +1,4 @@
-// Copyright (c) 2010-2020 LG Electronics, Inc.
+// Copyright (c) 2010-2023 LG Electronics, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -387,12 +387,14 @@ void LS2Handle::SetAppId(const v8::FunctionCallbackInfo<v8::Value>& args)
     HandleScope scope(isolate);
 
     try {
-        ConvertFromJS<const char*> serviceName(args[0]);
-        if (strcmp(serviceName.value(), "com.webos.service.jsserver"))
-            checkCallerScriptPermissions(isolate);
-
         if (args.Length() < 2) {
             throw std::runtime_error("Invalid arguments");
+        }
+
+        ConvertFromJS<const char*> serviceName(args[0]);
+        if (serviceName.value()) {
+            if (strcmp(serviceName.value(), "com.webos.service.jsserver"))
+                checkCallerScriptPermissions(isolate);
         }
 
         ConvertFromJS<std::string> appId(args[0]);
