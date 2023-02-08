@@ -111,7 +111,7 @@ void LS2Handle::New(const v8::FunctionCallbackInfo<v8::Value>& args)
         }
         else { // correct initialization. Arguments: "service name"
             std::string appId = "";
-            if (!strcmp(serviceName.value(), "com.webos.service.jsserver"))
+            if (serviceName.value() &&!strcmp(serviceName.value(), "com.webos.service.jsserver"))
             {
                 appId = serviceName.value();
             }
