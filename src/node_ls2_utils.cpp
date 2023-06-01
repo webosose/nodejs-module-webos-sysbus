@@ -18,7 +18,7 @@
 
 template <> v8::Local<v8::Value> ConvertToJS<const char*>(const char* v)
 {
-    return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), v);
+    return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), v).ToLocalChecked();
 }
 
 template <> v8::Local<v8::Value> ConvertToJS<uint32_t>(uint32_t v)

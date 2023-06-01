@@ -89,10 +89,10 @@ void MemberFunctionWrapper(Result (T::*MemFunc)(ArgsToMember...), const v8::Func
 
 	} catch( std::exception const & ex ) {
 		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate,
-			ex.what())));
+			ex.what()).ToLocalChecked()));
 	} catch( ... ) {
 		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate,
-			"Native function threw an unknown exception.")));
+			"Native function threw an unknown exception.").ToLocalChecked()));
 	}
 }
 
@@ -118,10 +118,10 @@ void MemberFunctionWrapper(Result (T::*MemFunc)(ArgsToMember...) const, const v8
 
 	} catch( std::exception const & ex ) {
 		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate,
-			ex.what())));
+			ex.what()).ToLocalChecked()));
 	} catch( ... ) {
 		isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate,
-			"Native function threw an unknown exception.")));
+			"Native function threw an unknown exception.").ToLocalChecked()));
 	}
 }
 
